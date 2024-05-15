@@ -1,0 +1,115 @@
+openapi: 3.0.1
+info:
+  title: Login Auth API
+  version: v1
+servers:
+  - url: 'http://localhost:8080'
+    description: Generated server url
+tags:
+  - name: User
+    description: APIs relacionadas a usuários
+  - name: User Authentication
+    description: Registro e autenticação de usuário
+paths:
+  /auth/register:
+    post:
+      tags:
+        - User Authentication
+      summary: Registrar usuário
+      description: Retorna um response com token e o nome do usuário
+      operationId: register
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterRequestDTO'
+        required: true
+      responses:
+        '200':
+          description: Sucesso
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ResponseDTO'
+        '400':
+          description: Dados inválidos
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ResponseDTO'
+  /auth/login:
+    post:
+      tags:
+        - User Authentication
+      summary: Autenticar login
+      description: Retorna um response com token e o nome do usuário
+      operationId: login
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequestDTO'
+        required: true
+      responses:
+        '200':
+          description: Sucesso
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ResponseDTO'
+        '404':
+          description: Usuário não encontrado
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ResponseDTO'
+  /users:
+    get:
+      tags:
+        - User
+      summary: Autenticado
+      description: Retorna um suceesso caso usuário esteja autenticado
+      operationId: getUsers
+      responses:
+        '200':
+          description: Sucesso
+          content:
+            '*/*':
+              schema:
+                type: string
+        '403':
+          description: Usuário não autenticado
+          content:
+            '*/*':
+              schema:
+                type: string
+components:
+  schemas:
+    RegisterRequestDTO:
+      type: object
+      properties:
+        name:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+    ResponseDTO:
+      type: object
+      properties:
+        name:
+          type: string
+        token:
+          type: string
+    LoginRequestDTO:
+      type: object
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
